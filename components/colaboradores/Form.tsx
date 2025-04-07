@@ -13,6 +13,7 @@ import { FC } from "react";
 
 interface FormProps {
   setIsFormVisible: (visible: boolean) => void;
+  setShowForm: (show: boolean) => void;
 }
 const Form: FC<FormProps> = ({ setIsFormVisible }) => {
   // Configuración de react-hook-form para colaborador
@@ -36,16 +37,22 @@ const Form: FC<FormProps> = ({ setIsFormVisible }) => {
           icon: "error",
           title: "Error",
           text: result.message,
+          background: "#1e293b",
+          color: "#e2e8f0",
+          iconColor: "#10b981",
         });
       } else {
         Swal.fire({
           icon: "success",
           title: "Éxito",
           text: result.message,
+          background: "#1e293b",
+          color: "#e2e8f0",
+          iconColor: "#10b981",
         });
+        reset();
+        setIsFormVisible(false);
       }
-      reset();
-      setIsFormVisible(false);
     } catch (error) {
       console.error("Error al agregar colaborador:", error);
       Swal.fire({

@@ -19,6 +19,9 @@ import FormProject from "@/components/projects/FormProject";
 import { ProyectsType } from "@/src/types/projectsType";
 import FormTask from "../tasks/FormTask";
 import { ColaboradoresType } from "@/src/types/colaboradorestype";
+import { formatTaskStatus, getTaskStatusClasses } from "@/src/utils/css";
+import DeleteButton from "@/src/ui/DeleteButton";
+import { handleDelete } from "@/actions/deleteActions";
 
 interface ListProjectsProps {
   colaboradores: ColaboradoresType[]; // Cambiado a ColaboradoresType
@@ -73,32 +76,9 @@ const ListProjects: FC<ListProjectsProps> = ({
     if (onTaskCreated) onTaskCreated();
   };
 
-  // Función para formatear el estado de la tarea
-  const formatTaskStatus = (status: string) => {
-    switch (status) {
-      case "TODO":
-        return "Por hacer";
-      case "INPROGRESS":
-        return "En progreso";
-      case "COMPLETED":
-        return "Completado";
-      default:
-        return status;
-    }
-  };
-
-  // Función para obtener clases de estilo según el estado de la tarea
-  const getTaskStatusClasses = (status: string) => {
-    switch (status) {
-      case "TODO":
-        return "border-slate-500/30 text-slate-400 bg-slate-500/10";
-      case "INPROGRESS":
-        return "border-blue-500/30 text-blue-400 bg-blue-500/10";
-      case "COMPLETED":
-        return "border-green-500/30 text-green-400 bg-green-500/10";
-      default:
-        return "border-slate-500/30 text-slate-400 bg-slate-500/10";
-    }
+  const oncloseDetail = () => {
+    setShowTaskForm(true);
+    setShowDetail(false);
   };
 
   return (
@@ -130,7 +110,7 @@ const ListProjects: FC<ListProjectsProps> = ({
       </div>
 
       {/* Formulario para crear proyecto */}
-      {showForm && <FormProject />}
+      {showForm && <FormProject setShowForm={setShowForm} />}
 
       {/* Formulario para crear tarea */}
       {showTaskForm && selectedProyecto && (
@@ -168,9 +148,20 @@ const ListProjects: FC<ListProjectsProps> = ({
           </div>
 
           {/* Información general del proyecto */}
+          {/* Información general del proyecto */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
+              <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/50 relative">
+                {/* Botón de eliminar posicionado en la esquina superior derecha */}
+                <div className="absolute top-3 right-3">
+                  <DeleteButton
+                    entityId={selectedProyecto.id}
+                    entityType="proyecto"
+                    entityName={selectedProyecto.name}
+                    onDelete={handleDelete}
+                  />
+                </div>
+
                 <h3 className="text-sm font-medium text-slate-400 mb-2">
                   Información del proyecto
                 </h3>
@@ -223,13 +214,13 @@ const ListProjects: FC<ListProjectsProps> = ({
               </div>
             </div>
 
+            {/* Sección de equipo de trabajo (se mantiene igual) */}
             <div>
               <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
                 <h3 className="text-sm font-medium text-slate-400 mb-2">
                   Equipo de trabajo
                 </h3>
 
-                {/* Extracción de colaboradores únicos de las tareas */}
                 {selectedProyecto.tasks && selectedProyecto.tasks.length > 0 ? (
                   <div className="space-y-3">
                     {Array.from(
@@ -296,7 +287,7 @@ const ListProjects: FC<ListProjectsProps> = ({
               Tareas
             </h3>
             <button
-              onClick={() => setShowTaskForm(true)}
+              onClick={() => oncloseDetail()}
               className="inline-flex items-center px-3 py-1.5 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded-lg hover:bg-cyan-500/20 transition-all"
             >
               <Plus className="w-4 h-4 mr-1" strokeWidth={1.5} />
@@ -368,13 +359,19 @@ const ListProjects: FC<ListProjectsProps> = ({
                           {formatTaskStatus(task.status)}
                         </span>
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-center">
+                      <td className="px-4 py-3 whitespace-nowrap text-center ">
                         <button
-                          className="p-1.5 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-lg hover:bg-amber-500/20 transition-all"
+                          className="p-1.5 mr-2 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-lg hover:bg-amber-500/20 transition-all"
                           title="Editar tarea"
                         >
                           <FileEdit className="w-4 h-4" strokeWidth={1.5} />
                         </button>
+                        <DeleteButton
+                          entityId={task.id}
+                          entityType="tarea"
+                          entityName={task.title}
+                          onDelete={handleDelete}
+                        />
                       </td>
                     </tr>
                   ))}

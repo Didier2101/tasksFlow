@@ -9,7 +9,6 @@ const links = [
   { href: "/admin/inicio", text: "Inicio", icon: Home },
   { href: "/admin/proyectos", text: "Proyectos", icon: FolderDot },
   { href: "/admin/colaboradores", text: "Colaboradores", icon: UsersRound },
-  { href: "/admin/tareas", text: "Tareas", icon: UsersRound },
   { href: "/admin/ideas", text: "Nuevas Ideas", icon: UsersRound },
 ];
 

@@ -1,16 +1,19 @@
 import { ProjectFormData } from "@/schemas/projects/projectSchema";
 import { createProject } from "@/server/projects/projects";
 import { AlertCircle, FolderPlus, Save } from "lucide-react";
-import React from "react";
+import React, { FC } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 
-const FormProject = () => {
+interface FormProjectProps {
+  setShowForm: (show: boolean) => void;
+}
+const FormProject: FC<FormProjectProps> = ({ setShowForm }) => {
   // Formulario para proyecto
   const {
     register,
     handleSubmit,
-    // reset,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<ProjectFormData>({
     mode: "all",
@@ -26,6 +29,9 @@ const FormProject = () => {
           icon: "error",
           title: "Error",
           text: result.message,
+          background: "#1e293b",
+          color: "#e2e8f0",
+          iconColor: "#10b981",
         });
       } else {
         // Mostrar alerta de éxito
@@ -33,8 +39,12 @@ const FormProject = () => {
           icon: "success",
           title: "Éxito",
           text: result.message,
+          background: "#1e293b",
+          color: "#e2e8f0",
+          iconColor: "#10b981",
         });
-        // reset();
+        reset();
+        setShowForm(false); // Cerrar el formulario después de enviar
       }
     } catch (error) {
       console.error("Error al agregar proyecto:", error);

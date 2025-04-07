@@ -46,6 +46,9 @@ const FormTask: FC<FormTaskProps> = ({
           icon: "error",
           title: "Error",
           text: result.message,
+          background: "#1e293b",
+          color: "#e2e8f0",
+          iconColor: "#10b981",
         });
       } else {
         // Mostrar alerta de éxito
@@ -53,6 +56,9 @@ const FormTask: FC<FormTaskProps> = ({
           icon: "success",
           title: "Éxito",
           text: result.message,
+          background: "#1e293b",
+          color: "#e2e8f0",
+          iconColor: "#10b981",
         });
         reset();
         setShowTaskForm(false); // Ocultar el formulario después de crear la tarea
@@ -63,6 +69,9 @@ const FormTask: FC<FormTaskProps> = ({
         icon: "error",
         title: "Error",
         text: "Ocurrió un error inesperado",
+        background: "#1e293b",
+        color: "#e2e8f0",
+        iconColor: "#10b981",
       });
     }
   };
